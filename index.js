@@ -11,21 +11,53 @@ import {
   Edit,
   Sort,
   ForeignKey,
-  Toolbar
+  Toolbar,
+  Reorder,
+  Resize
 } from "@syncfusion/ej2-react-grids";
 import { orderDetails, customerData } from "./data";
 import { SampleBase } from "./sample-base";
+
+const newCustomerData = [
+  {
+    CustomerID: "XXX",
+    ContactName: "Foo"
+  },
+  {
+    CustomerID: "YYY",
+    ContactName: "Bar"
+  },
+  {
+    CustomerID: "ZZZ",
+    ContactName: "Baz"
+  }
+];
+
 export class ForeignKeyColumn extends SampleBase {
   constructor() {
     super(...arguments);
     this.toolbarOptions = ["Add", "Edit", "Delete", "Update", "Cancel"];
     this.validationRules = { required: true };
+
+    this.state = {
+      customerData
+    };
   }
+
+  reloadCustomerData = () => {
+      this.setState({
+        customerData: newCustomerData
+      });
+  }
+
   render() {
     return (
       <div className="control-pane">
+        <button onClick={this.reloadCustomerData}>Reload customer data</button>
         <div className="control-section">
           <GridComponent
+            allowReordering={true}
+            allowResizing={true}
             dataSource={orderDetails}
             allowPaging={true}
             ref={grid => (this.gridInstance = grid)}
@@ -56,7 +88,7 @@ export class ForeignKeyColumn extends SampleBase {
                 validationRules={this.validationRules}
                 foreignKeyValue="ContactName"
                 foreignKeyField="CustomerID"
-                dataSource={customerData}
+                dataSource={this.state.customerData}
               />
               <ColumnDirective
                 field="Freight"
@@ -72,15 +104,18 @@ export class ForeignKeyColumn extends SampleBase {
                 headerText="Ship Name"
                 width="170"
               />
-              <ColumnDirective
-                field="ShipCountry"
-                headerText="Ship Country"
-                width="150"
-                editType="dropdownedit"
-              />
             </ColumnsDirective>
             <Inject
-              services={[Filter, Page, Edit, Sort, ForeignKey, Toolbar]}
+              services={[
+                Filter,
+                Page,
+                Edit,
+                Sort,
+                ForeignKey,
+                Toolbar,
+                Reorder,
+                Resize
+              ]}
             />
           </GridComponent>
         </div>
